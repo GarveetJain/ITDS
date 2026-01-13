@@ -1,0 +1,38 @@
+# Part 3
+
+# Fill in the function loss below
+
+class PoissonRegression(object):
+    def __init__(self):
+        self.coeffs = None
+        self.result = None
+    
+    def fit(self,X,Y):
+        import numpy as np
+        from scipy import optimize
+
+        # define the objective/cost/loss function we want to minimise
+        def loss(coeffs):
+            # The parameter lambda for the given X and the proposed values 
+            # of the coefficients, here coeff[:-1] represent alpha 
+            # and coeff[-1] represent beta
+            lam = np.exp(np.dot(X,coeffs[:-1])+coeffs[-1])
+
+            # use the Y variable that is available here to define 
+            # the loss function, return the value of the loss for 
+            # this Y and for this parameter lam defined above
+            return np.sum(lam - Y * np.log(lam))
+
+        #Use the loss above together with an optimization method from scipy
+        #to find the coefficients of the model
+        #this is prepared for you below
+
+        initial_arguments = np.zeros(shape=X.shape[1]+1) # initial guess as 0
+        self.result = optimize.minimize(loss, initial_arguments,method='cg')
+        self.coeffs = self.result.x
+    
+    def predict(self,X):
+        #Use the trained model to predict Y
+        if (self.coeffs is not None):
+            return np.exp(np.dot(X,self.coeffs[:-1])+self.coeffs[-1])
+
