@@ -1,0 +1,43 @@
+
+## Students passing exam (Sample exam problem)
+Let's say we have an exam question which consists of $10$ yes/no questions. 
+From past performance of similar students, a randomly chosen student will know the correct answer to $N \sim \text{binom}(10,6/10)$ questions. Furthermore, we assume that the student will guess the answer with equal probability to each question they don't know the answer to, i.e. given $N$ we define $Z \sim \text{binom}(10-N,1/2)$ as the number of correctly guessed answers. Define $Y = N + Z$, i.e., $Y$ represents the number of total correct answers.
+
+We are interested in setting a deterministic threshold $T$, i.e., we would pass a student at threshold $T$ if $Y \geq T$. Here $T \in \{0,1,2,\ldots,10\}$.
+
+1. [5p] For each threshold $T$, compute the probability that the student *knows* less than $5$ correct answers given that the student passed, i.e., $N < 5$. Put the answer in `problem11_probabilities` as a list.
+2. [3p] What is the smallest value of $T$ such that if $Y \geq T$ then we are 90\% certain that $N \geq 5$?
+
+
+
+from scipy.special import binom as binomial
+p = 6/10
+p_N = lambda k: binomial(10,k)*((1-p)**(10-k))*((p)**k)
+
+def p_Z_given_N(z, n):
+    return binomial(10-n, z) * (0.5**(10-n)) #simplified from binom(1-n,z) *((1/2)**z )* ((1/2)**10-n-z)
+
+problem11_probabilities = []
+
+for T in range(11):
+    numer = 0.0
+    denom = 0.0
+    
+    for n in range(11):
+        for z in range(10 - n + 1):
+            y = n + z # y is a discrete transformation of n and z so it's probabilities are just the sum of joint probability of n and z
+            joint_prob = p_N(n) * p_Z_given_N(z, n)
+            
+            if y >= T:
+                denom += joint_prob
+                if n < 5:
+                    numer += joint_prob
+    
+    problem11_probabilities.append(numer / denom if denom > 0 else 0.0)
+problem11_probabilities
+
+
+
+problem12_T = min([i for i,p in enumerate(problem11_probabilities) if problem11_probabilities[i]<=0.1])
+problem12_T
+
