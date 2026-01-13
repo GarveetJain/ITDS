@@ -1,0 +1,40 @@
+START
+ |
+ |-- What are you averaging?
+ |
+ |---> Mean  ------------------------------+
+ |                                         |
+ |                           What tails does X have?
+ |                                         |
+ |          Deterministic? -------- YES --> Trivial (YES)
+ |                                         |
+ |          Sub-Gaussian? --------- YES --> exp(-n ε²)
+ |                                         |
+ |          Sub-Exponential? ------ YES --> exp(-n min(ε², ε))
+ |                                         |
+ |          Finite variance only? -- YES --> NO (polynomial only)
+ |
+ |
+ |---> Variance ---------------------------+
+                                           |
+                               What tails does X have?
+                                           |
+               Sub-Gaussian? -------- YES --> exp(-n min(ε², ε))
+                                           |
+               Sub-Exponential? ----- YES --> NO (in general)
+                                           |
+               Finite variance only? - YES --> NO
+
+
+| Quantity       | Assumption on (X)    | Exponential concentration? | Tail type                         |
+| -------------- | -------------------- | -------------------------- | --------------------------------- |
+| Mean           | Deterministic        | ✅ (trivial)                | 0                                 |
+| Mean           | Sub-Gaussian         | ✅                          | (e^{-n\epsilon^2})                |
+| Mean           | Sub-Exponential      | ✅                          | (e^{-n\min(\epsilon^2,\epsilon)}) |
+| Mean           | Finite variance only | ❌                          | (1/n)                             |
+| Variance       | Sub-Gaussian         | ✅                          | (e^{-n\min(\epsilon^2,\epsilon)}) |
+| Variance       | Sub-Exponential      | ❌                          | —                                 |
+| Variance       | Finite variance only | ❌                          | —                                 |
+| Higher moments | Sub-Gaussian         | ✅                          | sub-exponential                   |
+
+
